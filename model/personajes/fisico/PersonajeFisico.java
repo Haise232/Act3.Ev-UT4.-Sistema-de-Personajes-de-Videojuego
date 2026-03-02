@@ -31,13 +31,6 @@ public abstract class PersonajeFisico extends Personaje {
         }
         
 
-        if (durabilidadArma <= 0) {
-            System.out.println(this.nombre + " ¡su " + this.tipoArma + " se ha roto! Pelea con los puños.");
-            tipoArma = "puños";
-            fuerzaFisica = (int)(fuerzaFisica * 0.6);
-            this.durabilidadArma = 0;
-        }
-
         if (this.durabilidadArma <= 0) {
             this.durabilidadArma = 0; 
 
