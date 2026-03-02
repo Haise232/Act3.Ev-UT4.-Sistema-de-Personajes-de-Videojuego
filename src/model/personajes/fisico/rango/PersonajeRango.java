@@ -1,10 +1,13 @@
-public class PersonajeRango extends PersonajeFisico {
+package model.personajes.fisico.rango;
+import model.personajes.fisico.PersonajeFisico;
+
+public abstract class PersonajeRango extends PersonajeFisico {
 
     protected int municion;
     protected int probabilidadCamuflaje; 
 
     public PersonajeRango(String nombre, int nivel, int salud, int estamina, int fuerzaFisica, String tipoArma, int armadura) {
-        super(nombre, nivel, salud, estamina, tipoArma);
+        super(nombre, nivel, salud, estamina, fuerzaFisica, tipoArma, armadura);
     }
 
     @Override

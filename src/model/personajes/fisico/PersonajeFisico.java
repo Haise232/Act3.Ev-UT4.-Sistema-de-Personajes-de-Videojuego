@@ -1,7 +1,6 @@
 package model.personajes.fisico;
 
 import model.personajes.Personaje;
-import java.util.UUID;
 public abstract class PersonajeFisico extends Personaje {
 
     protected int fuerzaFisica;
@@ -18,6 +17,24 @@ public abstract class PersonajeFisico extends Personaje {
     }
 
     public abstract  int  golpeCritico();
+
+    @Override
+    public void recibir(int danio) {
+        int danioReal = danio - this.armadura;
+        if (danioReal < 0) {
+            danioReal = 0;
+            System.out.println("¡CLINK! El ataque rebota en la armadura de " + this.nombre + " sin hacerle ni un rasguño.");
+        } else {
+            this.salud -= danioReal;
+            System.out.println(this.nombre + " recibe " + danioReal + " de daño físico. (Salud restante: " + this.salud + ")");
+        }
+
+        if (this.salud <= 0) {
+            this.salud = 0;
+            this.estaVivo = false;
+            System.out.println("¡ " + this.nombre + " ! ha caído en combate!");
+        }
+    }
 
     public int desgasteArma() {
         int probabilidadDesgaste = (int) (Math.random() * 100 );
