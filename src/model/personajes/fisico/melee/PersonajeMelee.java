@@ -1,4 +1,7 @@
-public class PersonajeMelee extends PersonajeFisicio {
+package model.personajes.fisico.melee;
+import model.personajes.fisico.PersonajeFisico;
+
+public class PersonajeMelee extends PersonajeFisico {
     protected int agilidad; 
     protected int peso; 
 

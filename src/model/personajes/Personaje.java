@@ -1,4 +1,4 @@
-
+package model.personajes;
 
 import java.util.UUID;
 
