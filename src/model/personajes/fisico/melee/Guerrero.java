@@ -9,7 +9,9 @@ public abstract class Guerrero extends PersonajeMelee {
     }
 
     @Override
-    public void atacar(Personaje personajeObjetivo) {
-        
+    public void atacar(Personaje objetivo) {
+        System.out.println("¡Por el honor de mi clan!");
+        estamina -= 5;
+        super.atacar(objetivo);
     }
 }
