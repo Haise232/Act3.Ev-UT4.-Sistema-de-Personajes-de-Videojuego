@@ -29,6 +29,8 @@ public abstract class Personaje {
 
     public abstract void recibir(int danio);
 
+    public abstract void probabilidad(double probabilidad);
+
 
     public String obtenerEstado() {
         return String.format("[%s] HP: %d/%d | Nivel: %d | Estado: %s",
