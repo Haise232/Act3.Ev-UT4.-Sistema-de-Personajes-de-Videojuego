@@ -1,51 +1,30 @@
 package view;
 
 import model.personajes.Personaje;
-<<<<<<< HEAD
-import java.util.List;
-
-public class ConsolaView {
-    public void mostrarMensaje(String mensaje) {
-        System.out.println("Sistema: " + mensaje);
-    }    
-
-    public void mostrarPersonajes(List<Personaje> personajes) {
-        System.out.println("Personajes disponibles:");
-        for (Personaje p : personajes) {
-            System.out.println("- " + p.getString());
-        }
-        System.out.println("-----------------------------");
-=======
 import model.personajes.fisico.PersonajeFisico;
 import model.personajes.magico.PersonajeMagico;
 import java.util.List;
 
 public class ConsolaView {
 
-    // ── Separadores ─────────────────────────────────────────────────────────────
-    private static final String LINEA  = "═══════════════════════════════════════════════════════";
-    private static final String LINEA2 = "───────────────────────────────────────────────────────";
-
     public void mostrarMensaje(String mensaje) {
-        System.out.println("  » " + mensaje);
+        System.out.println(">> " + mensaje);
     }
 
     public void mostrarTitulo(String titulo) {
-        System.out.println("\n╔" + LINEA + "╗");
-        System.out.printf( "║  %-54s║%n", titulo);
-        System.out.println("╚" + LINEA + "╝");
+        System.out.println("\n========================================");
+        System.out.println("  " + titulo);
+        System.out.println("========================================");
     }
 
     public void mostrarSeccion(String titulo) {
-        System.out.println("\n┌" + LINEA2 + "┐");
-        System.out.printf( "│  %-54s│%n", titulo);
-        System.out.println("└" + LINEA2 + "┘");
+        System.out.println("\n--- " + titulo + " ---");
     }
 
     public void mostrarPersonajes(List<Personaje> personajes) {
         mostrarSeccion("PERSONAJES EN JUEGO");
         for (Personaje p : personajes) {
-            System.out.println("  • " + p.getString());
+            System.out.println("  - " + p.getString());
         }
         System.out.println();
     }
@@ -54,13 +33,17 @@ public class ConsolaView {
         System.out.printf("  [%s] Salud: %d/%d", p.getNombre(), p.getSalud(), p.getSaludMaxima());
         if (p instanceof PersonajeMagico) {
             PersonajeMagico pm = (PersonajeMagico) p;
-            System.out.printf(" | Maná: %d/%d", pm.getMana(), pm.getManaMaximo());
+            System.out.printf(" | Mana: %d/%d", pm.getMana(), pm.getManaMaximo());
         }
         if (p instanceof PersonajeFisico) {
             PersonajeFisico pf = (PersonajeFisico) p;
             System.out.printf(" | Arma: %s [%d%%]", pf.getTipoArma(), pf.getDurabilidadArma());
         }
-        System.out.println(p.estaVivo() ? " ✔" : " ✖ CAÍDO");
+        if (p.estaVivo()) {
+            System.out.println(" (vivo)");
+        } else {
+            System.out.println(" (caido)");
+        }
     }
 
     public void mostrarEstadoGrupo(List<Personaje> personajes) {
@@ -71,7 +54,6 @@ public class ConsolaView {
     }
 
     public void mostrarSeparador() {
-        System.out.println("  " + LINEA2);
->>>>>>> d4b6f253e2668716fb6ebba3bc48f6115f58dd14
+        System.out.println("----------------------------------------");
     }
 }
