@@ -12,9 +12,9 @@ public abstract class PersonajeFisicoRango extends PersonajeFisico {
         super(nombre, vida, ataque, defensa);
         this.alcanceMaximo = alcanceMaximo;
         this.proyectilesMaximos = proyectilesMaximos;
-        this.proyectiles = proyectilesMaximos; // Inicialmente tiene todos los proyectiles
+        this.proyectiles = proyectilesMaximos;
         this.precisionBase = precisionBase;
-        this.enRecarga = false; // Inicialmente no está en recarga
+        this.enRecarga = false;
     }
 
     @Override
@@ -24,79 +24,73 @@ public abstract class PersonajeFisicoRango extends PersonajeFisico {
             System.out.println(this.nombre + " ha realizado un golpe crítico con daño de " + dañoCritico);
             return dañoCritico;
         }
-        return 0; // No se ha realizado un golpe crítico
+        return 0;
     }
 
     @Override 
     public int calcularArmadura (Personaje atacante) {
         if (atacante instanceof PersonajeFisicoRango) {
-            int reducida = (int) ( this.armadura * 0.15); // Reduce la armadura en un 15% contra ataques a distancia
+            int reducida = (int) ( this.armadura * 0.15);
             return reducida;
-
         }
-        return this.armadura; // Sin reducción para otros tipos de ataques
+        return this.armadura;
     }
 
     public int atacarDistancia(int distancia) {
         if (enRecarga) {
             System.out.println(this.nombre + " está recargando y no puede atacar.");
-            return 0; // No puede atacar mientras está en recarga
+            return 0;
         }
 
         if (proyectiles <= 0) {
             System.out.println(this.nombre + " no tiene proyectiles y necesita recargar.");
-            return 0; // No puede atacar sin proyectiles
+            return 0;
         }
 
         if (distancia > alcanceMaximo) {
             System.out.println(this.nombre + " está fuera de alcance y no puede atacar.");
-            return 0; // No puede atacar si el objetivo está fuera de alcance
+            return 0;
         }
 
-        proyectiles--; // Dispara un proyectil
-        double precisionFinal = Math.max(0.1, precisionBase - (double) distancia / alcanceMaximo * 0.5); // La precisión disminuye con la distancia, pero no puede ser menor a 0.1
+        proyectiles--;
+        double precisionFinal = Math.max(0.1, precisionBase - (double) distancia / alcanceMaximo * 0.5);
 
         if (Math.random() > precisionFinal) {
             System.out.println(this.nombre + " ha fallado el ataque a distancia.");
-            return 0; // El ataque ha fallado
+            return 0;
         }
-        int daño = this.ataque; // Daño base del personaje
+
+        int daño = this.ataque;
         System.out.println(this.nombre + " ha atacado a distancia con un daño de " + daño);
         return daño;
     }
+
     public void recargar() {
         if (enRecarga) {
             System.out.println(this.nombre + " ya está recargando.");
-            return; // Ya está en recarga
+            return;
         }
         enRecarga = true;
-        proyectiles = proyectilesMaximos; // Recarga todos los proyectiles
+        proyectiles = proyectilesMaximos;
         System.out.println(this.nombre + " ha recargado y ahora tiene " + proyectiles + " proyectiles.");
     }
 
     public int disparoArea(int numObjetivos) {
-        if (proyectiles < 3) { System.out.println("Proyectiles insuficientes para disparo en área."); return 0; }
+        if (proyectiles < 3) { 
+            System.out.println("Proyectiles insuficientes para disparo en área."); 
+            return 0; 
+        }
         proyectiles -= 3;
         int damage = (int) (this.ataque * 0.6);
         System.out.println("¡DISPARO EN ÁREA! " + numObjetivos + " objetivo(s) - Daño: " + damage + " c/u");
         return damage;
     }
 
-    public int getAlcanceMaximo() {
-        return alcanceMaximo;
-    }
-    public int getProyectiles() {
-        return proyectiles;
-    }
-    public int getProyectilesMaximos() {
-        return proyectilesMaximos;
-    }
-    public double getPrecisionBase() {
-        return precisionBase;
-    }
-    public boolean isEnRecarga() {
-        return enRecarga;
-    }
+    public int getAlcanceMaximo() { return alcanceMaximo; }
+    public int getProyectiles() { return proyectiles; }
+    public int getProyectilesMaximos() { return proyectilesMaximos; }
+    public double getPrecisionBase() { return precisionBase; }
+    public boolean isEnRecarga() { return enRecarga; }
 
     public void serAlcanceMaximo(int alcanceMaximo) {
         this.alcanceMaximo = alcanceMaximo;
@@ -114,5 +108,4 @@ public abstract class PersonajeFisicoRango extends PersonajeFisico {
                 + " | Precisión: " + String.format("%.0f%%", precisionBase * 100)
                 + " | Recargando: " + (enRecarga ? "Sí" : "No");
     }
-
 }
