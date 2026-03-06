@@ -1,6 +1,6 @@
 package controller;
 
-import model.peronajes.Personaje;
+import model.personajes.Personaje;
 import model.interfaces.Curable;
 import model.interfaces.Defendible;
 import java.util.ArrayList;
