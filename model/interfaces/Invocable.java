@@ -1,8 +1,9 @@
+package model.interfaces;
+
+import model.personajes.Personaje;
+
 public interface Invocable {
-    int Atacar();
-    int AtacarDistancia();
-    int DisparoArea(int numObjetivos);
-    boolean Recargar();
-    int GetAlcanceMaximo();
+    void invocarServidor(String tipo);
+    int contarServidores();
+    void desmontarServidor(Personaje objetivo);
 }
-    

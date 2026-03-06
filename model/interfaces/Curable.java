@@ -1,8 +1,8 @@
+package model.interfaces;
+
+import model.personajes.Personaje;
+
 public interface Curable {
-    int Curar(int cantidad);
-    int CurarTotal();
-    boolean EstaVivo();
-    int DarVida();
-    int DarVidaMaxima();
+    void curar(Personaje objetivo);
 }
 

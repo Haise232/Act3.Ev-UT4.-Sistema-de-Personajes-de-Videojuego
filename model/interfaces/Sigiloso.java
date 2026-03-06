@@ -1,5 +1,7 @@
+package model.interfaces;
+
 public interface Sigiloso {
-    int Esconderse();
-    int revelarse();
-    boolean EstaEscondido();
+    void esconderse();
+    void revelarse();
+    boolean estaEscondido();
 }
