@@ -1,7 +1,8 @@
+package model.interfaces;
+
+import model.personajes.Personaje;
+
 public interface Magico {
-    int Atacar();
-    int LanzarHechizo();
-    int HechizoArea(int numObjetivos);
-    boolean RecargarMana();
-    int GetAlcanceMaximo();
+    void lanzarHechizo(Personaje objetivo);
+    String getNombreHechizo();
 }

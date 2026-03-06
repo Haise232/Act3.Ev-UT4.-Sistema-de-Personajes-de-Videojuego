@@ -1,8 +1,6 @@
 package controller;
 
 import model.personajes.Personaje;
-import model.interfaces.Curable;
-import model.interfaces.Defendible;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +11,16 @@ public class GestorJuego {
         if (!personajes.contains(p)) personajes.add(p);
     }
 
-    public void ejecutarAccion(){
-        for (Personaje p : personajes) {
-            p.atacar(null);
-
-            if (p instanceof Curable) {
-                ((Curable) p).recibirCura(10);
+    public void ejecutarAcciones() {
+        System.out.println("\n=== Ronda de combate ===");
+        for (int i = 0; i < personajes.size(); i++) {
+            Personaje atacante = personajes.get(i);
+            if (atacante.estaVivo()) {
+                Personaje objetivo = personajes.get((i + 1) % personajes.size());
+                if (objetivo.estaVivo() && objetivo != atacante) {
+                    System.out.println("\n[Turno de " + atacante.getNombre() + "]");
+                    atacante.atacar(objetivo);
+                }
             }
         }
     }
