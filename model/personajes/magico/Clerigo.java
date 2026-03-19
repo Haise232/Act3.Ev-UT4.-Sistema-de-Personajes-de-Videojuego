@@ -1,18 +1,12 @@
 package model.personajes.magico;
 
-import model.interfaces.Curable;
+import model.interfaces.Especializable;
 import model.interfaces.Magico;
 import model.personajes.Personaje;
 
-public class Clerigo extends PersonajeMagico implements Curable, Magico {
-
-    private int fervorDivino;
-    private int curacionesRealizadas;
-
+public class Clerigo extends PersonajeMagico implements Magico, Especializable {
     public Clerigo(String nombre, int nivel) {
-        super(nombre, nivel, 90 + nivel * 6, 80 + nivel * 8, 14 + nivel * 2);
-        this.fervorDivino = 8 + nivel;
-        this.curacionesRealizadas = 0;
+        super(nombre, nivel, 95 + nivel * 6, 100 + nivel * 10, 14 + nivel * 2);
     }
 
     @Override
@@ -22,42 +16,34 @@ public class Clerigo extends PersonajeMagico implements Curable, Magico {
 
     @Override
     public void lanzarHechizo(Personaje objetivo) {
-        int coste = 15;
-        if (gastarMana(coste)) {
-            int damage = calcularPoderMagico() / 2 + fervorDivino;
-            objetivo.recibirDamage(damage);
-            System.out.printf("%s lanza %s sobre %s causando %d daño sagrado.%n",
-                    getNombre(), getNombreHechizo(), objetivo.getNombre(), damage);
-        }
+        if (objetivo == null) return;
+        if (!gastarMana(15)) return;
+        int damage = calcularPoderMagico() + 5;
+        objetivo.recibirDanio(damage);
+        System.out.printf("%s lanza Luz Divina y causa %d daño a %s.\n", getNombre(), damage, objetivo.getNombre());
     }
 
     @Override
-    public String getNombreHechizo() {
-        return "Castigo Divino";
+    public String getNombreHechizo() { return "Luz Divina"; }
+
+    @Override
+    public void ataqueEspecial(Personaje objetivo) {
+        if (objetivo == null) return;
+        if (!gastarMana(25)) return;
+        int heal = 25 + getNivel() * 2;
+        objetivo.curar(heal);
+        System.out.printf("%s channelea Sanación Mayor y cura %d puntos a %s.\n", getNombre(), heal, objetivo.getNombre());
     }
 
     @Override
-    public void curar(Personaje objetivo) {
-        int coste = 25;
-        if (gastarMana(coste)) {
-            int curacion = fervorDivino * 3 + calcularPoderMagico();
-            objetivo.curarSalud(curacion);
-            curacionesRealizadas++;
-            System.out.printf("%s cura a %s restaurando %d puntos de salud. [Curaciones: %d]%n",
-                    getNombre(), objetivo.getNombre(), curacion, curacionesRealizadas);
-        }
-    }
+    public String getNombreEspecial() { return "Sanación Mayor"; }
 
-    public void bendicion(Personaje objetivo) {
-        System.out.println(getNombre() + " bendice a " + objetivo.getNombre() + " con luz divina.");
-        curar(objetivo);
+    public void sanacion(Personaje objetivo) {
+        if (objetivo == null) return;
+        if (!gastarMana(25)) return;
+        objetivo.curar(25 + getNivel() * 2);
     }
-
-    public int getFervorDivino() { return fervorDivino; }
-    public int getCuracionesRealizadas() { return curacionesRealizadas; }
 
     @Override
-    public String toString() {
-        return super.toString() + String.format(" | Fervor: %d | Curaciones: %d", fervorDivino, curacionesRealizadas);
-    }
+    public String getRol() { return "Clerigo"; }
 }

@@ -1,88 +1,101 @@
 package model.personajes.magico;
 
+import java.util.ArrayList;
+import java.util.List;
+import model.interfaces.Especializable;
 import model.interfaces.Invocable;
 import model.interfaces.Magico;
 import model.personajes.Personaje;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Nigromante extends PersonajeMagico implements Magico, Invocable {
-
-    private int poderOscuro;
+public class Nigromante extends PersonajeMagico implements Magico, Invocable, Especializable {
+    private final int poderOscuro;
     private int almasAcumuladas;
-    private final List<String> servidores; // Lista de servidores invocados activos
+    private final List<String> servidores;
 
     public Nigromante(String nombre, int nivel) {
-        super(nombre, nivel, 65 + nivel * 5, 90 + nivel * 9, 16 + nivel * 2);
-        this.poderOscuro = 12 + nivel * 2;
+        super(nombre, nivel, 85 + nivel * 6, 110 + nivel * 10, 16 + nivel * 2);
+        this.poderOscuro = 10 + nivel * 2;
         this.almasAcumuladas = 0;
         this.servidores = new ArrayList<>();
     }
 
-    // Obligatorio: implementa el método abstracto de Personaje
     @Override
     public void atacar(Personaje objetivo) {
         lanzarHechizo(objetivo);
     }
 
-    // Implementación de Magico: drena vida y acumula almas al matar
     @Override
     public void lanzarHechizo(Personaje objetivo) {
+        if (objetivo == null) return;
         if (!gastarMana(20)) return;
         int damage = calcularPoderMagico() + poderOscuro;
-        objetivo.recibirDamage(damage);
-        curarSalud(damage / 4); // Roba 1/4 del daño como vida
-        almasAcumuladas++;
-        System.out.printf("%s drena %d de vida a %s. [Almas: %d]%n",
-                getNombre(), damage, objetivo.getNombre(), almasAcumuladas);
+        objetivo.recibirDanio(damage);
+        if (!objetivo.estaVivo()) {
+            almasAcumuladas++;
+            System.out.printf("%s absorbe el alma de %s. Almas: %d\n", getNombre(), objetivo.getNombre(), almasAcumuladas);
+            curar(damage / 2);
+        } else {
+            curar(damage / 4);
+        }
+        System.out.printf("%s lanza Drenar Vida y causa %d a %s.\n", getNombre(), damage, objetivo.getNombre());
     }
 
     @Override
-    public String getNombreHechizo() { return "Drenar Vida"; }
+    public String getNombreHechizo() {
+        return "Drenar Vida";
+    }
 
-    // Implementación de Invocable: consume 1 alma + mana para invocar un servidor
     @Override
     public void invocarServidor(String tipo) {
-        if (almasAcumuladas <= 0 || !gastarMana(30)) {
-            System.out.println(getNombre() + " no puede invocar (almas: " + almasAcumuladas + ").");
+        if (almasAcumuladas <= 0) {
+            System.out.println(getNombre() + " no tiene almas para invocar servidor.");
             return;
         }
+        if (!gastarMana(30)) return;
         almasAcumuladas--;
-        servidores.add(tipo);
-        System.out.printf("%s invoca un %s. [Servidores: %d | Almas: %d]%n",
-                getNombre(), tipo, servidores.size(), almasAcumuladas);
+        String servidor = tipo == null ? "Servidor Oscuro" : tipo;
+        servidores.add(servidor);
+        System.out.printf("%s invoca %s. Servidores activos: %d.\n", getNombre(), servidor, servidores.size());
     }
 
     @Override
-    public int contarServidores() { return servidores.size(); }
+    public int contarServidores() {
+        return servidores.size();
+    }
 
-    // Elimina el último servidor y lo hace explotar sobre el objetivo
     @Override
     public void desmontarServidor(Personaje objetivo) {
         if (servidores.isEmpty()) {
-            System.out.println(getNombre() + " no tiene servidores activos.");
+            System.out.println(getNombre() + " no tiene servidores para explotar.");
             return;
         }
-        String ultimo = servidores.remove(servidores.size() - 1); // Extrae y elimina el último
-        int damage = poderOscuro * 2;
-        objetivo.recibirDamage(damage);
-        System.out.printf("%s explota a su %s causando %d daño. [Servidores: %d]%n",
-                getNombre(), ultimo, damage, servidores.size());
+        if (objetivo == null) return;
+        String servidor = servidores.remove(servidores.size() - 1);
+        int damage = poderOscuro * 3;
+        objetivo.recibirDanio(damage);
+        System.out.printf("%s explota a %s y causa %d de daño a %s.\n", getNombre(), servidor, damage, objetivo.getNombre());
     }
 
-    // Lanza lanzarHechizo 3 veces seguidas mientras haya mana
+    @Override
+    public void ataqueEspecial(Personaje objetivo) {
+        ritualDeMuerte(objetivo);
+    }
+
+    @Override
+    public String getNombreEspecial() { return "Ritual de Muerte"; }
+
     public void ritualDeMuerte(Personaje objetivo) {
-        System.out.println(getNombre() + " inicia el Ritual de Muerte...");
-        for (int i = 0; i < 3 && getMana() >= 20; i++) lanzarHechizo(objetivo);
-        System.out.println("Ritual completado. Almas: " + almasAcumuladas);
+        System.out.println(getNombre() + " usa Ritual de Muerte.");
+        for (int i = 0; i < 2; i++) {
+            lanzarHechizo(objetivo);
+        }
     }
 
-    public int getPoderOscuro() { return poderOscuro; }
-    public int getAlmasAcumuladas() { return almasAcumuladas; }
+    @Override
+    public String getRol() { return "Nigromante"; }
 
     @Override
     public String toString() {
-        return super.toString() + String.format(" | PoderOscuro: %d | Almas: %d | Servidores: %d",
-                poderOscuro, almasAcumuladas, servidores.size());
+        return super.toString() + String.format(" | PoderOscuro: %d | Almas: %d | Servidores: %d", poderOscuro, almasAcumuladas, servidores.size());
     }
 }
